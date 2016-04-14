@@ -23,8 +23,8 @@ float controls[]       = {0, 0, 0}; /* pitch, roll, yaw */
 
 void setup()
 {
-    //serial_port = new Serial(this, Serial.list()[0], 115200);
-    //serial_port.buffer(5);
+    serial_port = new Serial(this, Serial.list()[0], 115200);
+    serial_port.buffer(5);
     size(600, 600);
 }
 
@@ -59,8 +59,8 @@ void mouseMoved()
     controls[0] = get_transformed_pitch();
     controls[1] = get_transformed_roll();
 
-//  serial_port.write("p" + pitch + "\n");
-//  serial_port.write("r" + roll + "\n");
+    serial_port.write("p" + pitch + "\n");
+    serial_port.write("r" + roll + "\n");
     print("p ", String.format("%.2f\n", controls[0]));
     print("r ", String.format("%.2f\n", controls[1]));
     flush();
@@ -71,32 +71,36 @@ void keyPressed()
     switch(key) {
     case 'w':
         throttle++;
+        serial_port.write("t " + throttle + "\n");
         print("t " + throttle + "\n");
         break;
     case 's':
         throttle--;
+        serial_port.write("t " + throttle + "\n");
         print("t " + throttle + "\n");
         break;
     case 'a':
         // yaw controls
         controls[2]++;
-        print("t " + controls[2] + "\n");
+        serial_port.write("y " + controls[2] + "\n");
+        print("y " + controls[2] + "\n");
         break;
     case 'd':
         controls[2]--;
-        print("t " + controls[2] + "\n");
+        serial_port.write("y " + controls[2] + "\n");
+        print("y " + controls[2] + "\n");
         break;
     default:
         for(int j = 0; j < 3; j++) {
             for(int k = 0; k < 3; k++) {
                 if (key == increase_keys[j][k]) {
                     values[j][k] += 0.01;
-                    //serial_port.write(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]);
+                    serial_port.write(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]);
                     print(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]));
                 }
                 else if (key == decrease_keys[j][k]) {
                     values[j][k] -= 0.01;
-                    // serial_port.write(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]));
+                    serial_port.write(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]));
                     print(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]));
                 }
             }
