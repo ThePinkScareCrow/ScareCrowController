@@ -5,8 +5,8 @@
 
 final int WINDOW_HEIGHT = 600;
 final int WINDOW_WIDTH = 600;
-final float PITCH_RANGE_SIZE = 10;
-final float ROLL_RANGE_SIZE = 10;
+final float PITCH_RANGE_SIZE = 20;
+final float ROLL_RANGE_SIZE = 20;
 
 import processing.serial.*;
 
