@@ -72,8 +72,8 @@ void mouseMoved()
     controls[0] = get_transformed_pitch();
     controls[1] = get_transformed_roll();
 
-    serial_port.write("p" + controls[0] + "\n");
-    serial_port.write("r" + controls[1] + "\n");
+    serial_port.write("p " + controls[0] + "\n");
+    serial_port.write("r " + controls[1] + "\n");
     print("p ", String.format("%.2f\n", controls[0]));
     print("r ", String.format("%.2f\n", controls[1]));
     flush();
