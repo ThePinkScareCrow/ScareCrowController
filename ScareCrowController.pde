@@ -59,11 +59,29 @@ void mouseMoved()
     controls[0] = get_transformed_pitch();
     controls[1] = get_transformed_roll();
 
-    serial_port.write("p" + pitch + "\n");
-    serial_port.write("r" + roll + "\n");
+    serial_port.write("p" + controls[0] + "\n");
+    serial_port.write("r" + controls[1] + "\n");
     print("p ", String.format("%.2f\n", controls[0]));
     print("r ", String.format("%.2f\n", controls[1]));
     flush();
+}
+
+void mousePressed()
+{
+    if (mouseButton == LEFT)
+        controls[2]++;
+    else if (mouseButton == RIGHT)
+        controls[2]--;
+
+    serial_port.write("y " + controls[2] + "\n");
+    print("y " + controls[2] + "\n");
+}
+
+void mouseWheel(MouseEvent event)
+{
+    throttle += event.getCount();
+    serial_port.write("t " + throttle + "\n");
+    print("t " + throttle + "\n");
 }
 
 void keyPressed()
@@ -95,13 +113,23 @@ void keyPressed()
             for(int k = 0; k < 3; k++) {
                 if (key == increase_keys[j][k]) {
                     values[j][k] += 0.01;
-                    serial_port.write(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]);
-                    print(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]));
+                    serial_port.write(String.format("%s%s %.3f\n",
+                                                    lookup_controls[j],
+                                                    lookup_pid[k],
+                                                    values[j][k]));
+                    print(String.format("%s%s %.3f\n",
+                                        lookup_controls[j],
+                                        lookup_pid[k],
+                                        values[j][k]));
                 }
                 else if (key == decrease_keys[j][k]) {
                     values[j][k] -= 0.01;
-                    serial_port.write(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]));
-                    print(String.format("%s%s %.3f\n", lookup_controls[j], lookup_pid[k], values[j][k]));
+                    serial_port.write(String.format("%s%s %.3f\n",
+                                                    lookup_controls[j],
+                                                    lookup_pid[k],
+                                                    values[j][k]));
+                    print(String.format("%s%s %.3f\n", lookup_controls[j],
+                                        lookup_pid[k], values[j][k]));
                 }
             }
         }
