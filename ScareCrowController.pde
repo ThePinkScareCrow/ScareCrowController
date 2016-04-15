@@ -16,11 +16,11 @@ Serial serial_port;
 /*                          PITCH P I D          ROLL P I D           YAW P I D      */
 char increase_keys[][] = { {'r',  't',  'y'}, {'u',  'i',  'o'}, {'p',  '[',  ']' } };
 char decrease_keys[][] = { {'R',  'T',  'Y'}, {'U',  'I',  'O'}, {'P',  '{',  '}' } };
-char lookup_controls[] = {'p', 'r', 'y'}; /* pitch, roll, yaw */
+char lookup_controls[] = {'p', 'r', 'y', 't'}; /* pitch, roll, yaw */
 char lookup_pid[]      = {'p', 'i', 'd'}; /* proportional, integral, derivative */
 float values[][]       = { {0, 0, 0}, {0, 0, 0}, {0, 0, 0} }; /* pitch, roll, yaw PIDs */
-float throttle         = 0;
-float controls[]       = {0, 0, 0}; /* pitch, roll, yaw */
+float controls[]       = {0, 0, 0, 0}; /* pitch, roll, yaw, throttle */
+boolean controls_update_flag[] = {false, false, false, false};
 int last_time = 0;
 
 void setup()
@@ -52,16 +52,21 @@ void draw()
         }
         display_text += "\n";
     }
-    display_text += String.format("t: %s\np: %s\nr: %s\ny: %s", throttle,
+    display_text += String.format("t: %s\np: %s\nr: %s\ny: %s", controls[3],
                                   controls[0], controls[1], controls[2]);
     text(display_text, 100, 100);
 
     int cur_time = millis();
     if (cur_time - last_time > SERIAL_PRINT_TIME_INTERVAL) {
-        String temp;
+        String temp = "";
 
-        temp = String.format("p %.2f\nr %.2f\ny %.2f\nt %.2f\n",
-                             controls[0], controls[1], controls[2], throttle);
+        for(int i = 0; i < 4; i++) {
+            if(controls_update_flag[i]) {
+                controls_update_flag[i] = false;
+                temp += String.format("%s %.2f\n",
+                                      lookup_controls[i], controls[i]);
+            }
+        }
         serial_port.write(temp);
         print(temp);
 
@@ -85,6 +90,8 @@ void mouseMoved()
 {
     controls[0] = get_transformed_pitch();
     controls[1] = get_transformed_roll();
+    controls_update_flag[0] = true;
+    controls_update_flag[1] = true;
 }
 
 void mousePressed()
@@ -93,28 +100,35 @@ void mousePressed()
         controls[2]++;
     else if (mouseButton == RIGHT)
         controls[2]--;
+    controls_update_flag[2] = true;
 }
 
 void mouseWheel(MouseEvent event)
 {
-    throttle -= event.getCount();
+    controls[3] -= event.getCount();
+    controls_update_flag[3] = true;
 }
 
 void keyPressed()
 {
     switch(key) {
     case 'w':
-        throttle++;
+        // throttle controls
+        controls[3]++;
+        controls_update_flag[3] = true;
         break;
     case 's':
-        throttle--;
+        controls[3]--;
+        controls_update_flag[3] = true;
         break;
     case 'a':
         // yaw controls
         controls[2]++;
+        controls_update_flag[2] = true;
         break;
     case 'd':
         controls[2]--;
+        controls_update_flag[2] = true;
         break;
     default:
         for(int j = 0; j < 3; j++) {
