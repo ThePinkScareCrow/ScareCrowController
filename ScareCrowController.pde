@@ -72,10 +72,16 @@ void mouseMoved()
     controls[0] = get_transformed_pitch();
     controls[1] = get_transformed_roll();
 
-    serial_port.write("p " + controls[0] + "\n");
-    serial_port.write("r " + controls[1] + "\n");
-    print("p ", String.format("%.2f\n", controls[0]));
-    print("r ", String.format("%.2f\n", controls[1]));
+    String temp;
+
+    temp = String.format("p %.2f\n", controls[0]);
+    serial_port.write(temp);
+    print(temp);
+
+    temp = String.format("r %.2f\n", controls[1]);
+    serial_port.write(temp);
+    print(temp);
+
     flush();
 }
 
@@ -86,15 +92,20 @@ void mousePressed()
     else if (mouseButton == RIGHT)
         controls[2]--;
 
-    serial_port.write("y " + controls[2] + "\n");
-    print("y " + controls[2] + "\n");
+    String temp;
+    temp = String.format("y %.2f\n", controls[2]);
+    serial_port.write(temp);
+    print(temp);
 }
 
 void mouseWheel(MouseEvent event)
 {
     throttle -= event.getCount();
-    serial_port.write("t " + throttle + "\n");
-    print("t " + throttle + "\n");
+
+    String temp;
+    temp = String.format("t %.2f\n", throttle);
+    serial_port.write(temp);
+    print(temp);
 }
 
 void keyPressed()
