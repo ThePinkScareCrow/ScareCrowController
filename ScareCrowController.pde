@@ -92,7 +92,7 @@ void mousePressed()
 
 void mouseWheel(MouseEvent event)
 {
-    throttle += event.getCount();
+    throttle -= event.getCount();
     serial_port.write("t " + throttle + "\n");
     print("t " + throttle + "\n");
 }
