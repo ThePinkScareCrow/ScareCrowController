@@ -7,6 +7,7 @@ final int WINDOW_HEIGHT = 600;
 final int WINDOW_WIDTH = 600;
 final float PITCH_RANGE_SIZE = 20;
 final float ROLL_RANGE_SIZE = 20;
+final int SERIAL_PRINT_TIME_INTERVAL = 10;
 
 import processing.serial.*;
 
@@ -20,6 +21,7 @@ char lookup_pid[]      = {'p', 'i', 'd'}; /* proportional, integral, derivative 
 float values[][]       = { {0, 0, 0}, {0, 0, 0}, {0, 0, 0} }; /* pitch, roll, yaw PIDs */
 float throttle         = 0;
 float controls[]       = {0, 0, 0}; /* pitch, roll, yaw */
+int last_time = 0;
 
 void setup()
 {
@@ -44,15 +46,27 @@ void draw()
     fill(0);
     String display_text = "";
     for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        display_text += String.format("%s%s: %s\n", lookup_controls[i],
-                                      lookup_pid[j], values[i][j]);
-      }
-      display_text += "\n";
+        for (int j = 0; j < 3; j++) {
+            display_text += String.format("%s%s: %s\n", lookup_controls[i],
+                                          lookup_pid[j], values[i][j]);
+        }
+        display_text += "\n";
     }
     display_text += String.format("t: %s\np: %s\nr: %s\ny: %s", throttle,
                                   controls[0], controls[1], controls[2]);
     text(display_text, 100, 100);
+
+    int cur_time = millis();
+    if (cur_time - last_time > SERIAL_PRINT_TIME_INTERVAL) {
+        String temp;
+
+        temp = String.format("p %.2f\nr %.2f\ny %.2f\nt %.2f\n",
+                             controls[0], controls[1], controls[2], throttle);
+        serial_port.write(temp);
+        print(temp);
+
+        last_time = cur_time;
+    }
 }
 
 float get_transformed_pitch()
@@ -71,18 +85,6 @@ void mouseMoved()
 {
     controls[0] = get_transformed_pitch();
     controls[1] = get_transformed_roll();
-
-    String temp;
-
-    temp = String.format("p %.2f\n", controls[0]);
-    serial_port.write(temp);
-    print(temp);
-
-    temp = String.format("r %.2f\n", controls[1]);
-    serial_port.write(temp);
-    print(temp);
-
-    flush();
 }
 
 void mousePressed()
@@ -91,21 +93,11 @@ void mousePressed()
         controls[2]++;
     else if (mouseButton == RIGHT)
         controls[2]--;
-
-    String temp;
-    temp = String.format("y %.2f\n", controls[2]);
-    serial_port.write(temp);
-    print(temp);
 }
 
 void mouseWheel(MouseEvent event)
 {
     throttle -= event.getCount();
-
-    String temp;
-    temp = String.format("t %.2f\n", throttle);
-    serial_port.write(temp);
-    print(temp);
 }
 
 void keyPressed()
@@ -113,24 +105,16 @@ void keyPressed()
     switch(key) {
     case 'w':
         throttle++;
-        serial_port.write("t " + throttle + "\n");
-        print("t " + throttle + "\n");
         break;
     case 's':
         throttle--;
-        serial_port.write("t " + throttle + "\n");
-        print("t " + throttle + "\n");
         break;
     case 'a':
         // yaw controls
         controls[2]++;
-        serial_port.write("y " + controls[2] + "\n");
-        print("y " + controls[2] + "\n");
         break;
     case 'd':
         controls[2]--;
-        serial_port.write("y " + controls[2] + "\n");
-        print("y " + controls[2] + "\n");
         break;
     default:
         for(int j = 0; j < 3; j++) {
@@ -140,20 +124,24 @@ void keyPressed()
                     serial_port.write(String.format("%s%s %.3f\n",
                                                     lookup_controls[j],
                                                     lookup_pid[k],
-                                                    values[j][k]));
+                                                    values[j][k])
+                                      );
                     print(String.format("%s%s %.3f\n",
                                         lookup_controls[j],
                                         lookup_pid[k],
-                                        values[j][k]));
+                                        values[j][k])
+                          );
                 }
                 else if (key == decrease_keys[j][k]) {
                     values[j][k] -= 0.01;
                     serial_port.write(String.format("%s%s %.3f\n",
                                                     lookup_controls[j],
                                                     lookup_pid[k],
-                                                    values[j][k]));
+                                                    values[j][k])
+                                      );
                     print(String.format("%s%s %.3f\n", lookup_controls[j],
-                                        lookup_pid[k], values[j][k]));
+                                        lookup_pid[k], values[j][k])
+                          );
                 }
             }
         }
