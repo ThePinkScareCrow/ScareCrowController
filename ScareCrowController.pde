@@ -40,6 +40,19 @@ void draw()
     stroke(0);
     line(0, mouseY, WINDOW_HEIGHT, mouseY);
     line(mouseX, 0, mouseX, WINDOW_WIDTH);
+
+    fill(0);
+    String display_text = "";
+    for (int i = 0; i < 3; i++) {
+      for (int j = 0; j < 3; j++) {
+        display_text += String.format("%s%s: %s\n", lookup_controls[i],
+                                      lookup_pid[j], values[i][j]);
+      }
+      display_text += "\n";
+    }
+    display_text += String.format("t: %s\np: %s\nr: %s\ny: %s", throttle,
+                                  controls[0], controls[1], controls[2]);
+    text(display_text, 100, 100);
 }
 
 float get_transformed_pitch()
