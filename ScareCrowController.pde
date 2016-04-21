@@ -112,6 +112,10 @@ void mouseWheel(MouseEvent event)
 void keyPressed()
 {
     switch(key) {
+    case ' ':
+        controls[3] = -100;
+        controls_update_flag[3] = true;
+        break;
     case 'w':
         // throttle controls
         controls[3]++;
