@@ -18,7 +18,7 @@ char decrease_keys[][] = { {'R',  'T',  'Y'}, {'U',  'I',  'O'}, {'P',  '{',  '}
 char lookup_controls[] = {'p', 'r', 'y'}; /* pitch, roll, yaw */
 char lookup_pid[]      = {'p', 'i', 'd'}; /* proportional, integral, derivative */
 float values[][]       = { {0, 0, 0}, {0, 0, 0}, {0, 0, 0} }; /* pitch, roll, yaw PIDs */
-float throttle         = 0;
+float throttle         = -180; /* For safety, so that propellors aren't triggered on startup if the drone is placed inclined*/
 float controls[]       = {0, 0, 0}; /* pitch, roll, yaw */
 
 void setup()
@@ -100,6 +100,11 @@ void mouseWheel(MouseEvent event)
 void keyPressed()
 {
     switch(key) {
+    case ' ':
+        throttle = -180; /* instant kill switch */
+        serial_port.write("t " + throttle + "\n");
+        print("t " + throttle + "\n");
+        break;
     case 'w':
         throttle++;
         serial_port.write("t " + throttle + "\n");
