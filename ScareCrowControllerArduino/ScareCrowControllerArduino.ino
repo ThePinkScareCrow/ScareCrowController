@@ -13,7 +13,7 @@ void setup()
     Serial.begin(115200);
     radio.begin();
     radio.setPALevel(RF24_PA_MAX);
-    radio.setChannel(10);
+    radio.setChannel(50);
     radio.setRetries(5, 15);
 
     if(radioNumber){
