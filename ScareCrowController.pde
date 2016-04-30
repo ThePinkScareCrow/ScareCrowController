@@ -8,6 +8,7 @@ final int WINDOW_WIDTH = 600;
 final float PITCH_RANGE_SIZE = 20;
 final float ROLL_RANGE_SIZE = 20;
 final int SERIAL_PRINT_TIME_INTERVAL = 10;
+final float THROTTLE_STEPS = 0.5;
 
 import processing.serial.*;
 
@@ -105,7 +106,7 @@ void mousePressed()
 
 void mouseWheel(MouseEvent event)
 {
-    controls[3] -= event.getCount();
+    controls[3] -= event.getCount() * THROTTLE_STEPS;
     controls_update_flag[3] = true;
 }
 
@@ -118,11 +119,11 @@ void keyPressed()
         break;
     case 'w':
         // throttle controls
-        controls[3]++;
+        controls[3] += THROTTLE_STEPS;
         controls_update_flag[3] = true;
         break;
     case 's':
-        controls[3]--;
+        controls[3] -= THROTTLE_STEPS;
         controls_update_flag[3] = true;
         break;
     case 'a':
