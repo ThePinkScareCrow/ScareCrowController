@@ -77,7 +77,7 @@ void draw()
 float get_transformed_pitch()
 {
     /* convert to pitch from position of mouse */
-    return (PITCH_RANGE_SIZE / WINDOW_HEIGHT) * (WINDOW_HEIGHT / 2 - mouseY);
+    return (PITCH_RANGE_SIZE / WINDOW_HEIGHT) * (mouseY - WINDOW_HEIGHT / 2);
 }
 
 float get_transformed_roll()
