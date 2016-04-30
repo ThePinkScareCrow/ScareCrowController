@@ -9,6 +9,8 @@ final float PITCH_RANGE_SIZE = 20;
 final float ROLL_RANGE_SIZE = 20;
 final int SERIAL_PRINT_TIME_INTERVAL = 10;
 final float THROTTLE_STEPS = 0.5;
+final float TUNING_INCREMENT_STEP = 0.05;
+final float TUNING_DECREMENT_STEP = 0.001;
 
 import processing.serial.*;
 
@@ -139,7 +141,7 @@ void keyPressed()
         for(int j = 0; j < 3; j++) {
             for(int k = 0; k < 3; k++) {
                 if (key == increase_keys[j][k]) {
-                    values[j][k] += 0.01;
+                    values[j][k] += TUNING_INCREMENT_STEP;
                     serial_port.write(String.format("%s%s %.3f\n",
                                                     lookup_controls[j],
                                                     lookup_pid[k],
@@ -152,7 +154,7 @@ void keyPressed()
                           );
                 }
                 else if (key == decrease_keys[j][k]) {
-                    values[j][k] -= 0.01;
+                    values[j][k] -= TUNING_DECREMENT_STEP;
                     serial_port.write(String.format("%s%s %.3f\n",
                                                     lookup_controls[j],
                                                     lookup_pid[k],
