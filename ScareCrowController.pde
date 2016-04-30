@@ -114,7 +114,7 @@ void keyPressed()
 {
     switch(key) {
     case ' ':
-        controls[3] = -100;
+        controls[3] = 0;
         controls_update_flag[3] = true;
         break;
     case 'w':
