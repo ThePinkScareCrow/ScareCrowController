@@ -11,6 +11,7 @@ final int SERIAL_PRINT_TIME_INTERVAL = 10;
 final float THROTTLE_STEPS = 0.5;
 final float TUNING_INCREMENT_STEP = 0.05;
 final float TUNING_DECREMENT_STEP = 0.001;
+final float KEYPAD_CONTROL_ANGLE = 10;
 
 import processing.serial.*;
 
@@ -112,12 +113,44 @@ void mouseWheel(MouseEvent event)
     controls_update_flag[3] = true;
 }
 
+void keyReleased() {
+     switch(key) {
+         case '8':
+         case '5':
+             controls[0] = 0;
+             controls_update_flag[0] = true;
+             break;
+         case '4':
+         case '6':
+             controls[1] = 0;
+             controls_update_flag[1] = true;
+             break;
+     }
+}
+
 void keyPressed()
 {
     switch(key) {
     case ' ':
+    case '0':
         controls[3] = 0;
         controls_update_flag[3] = true;
+        break;
+    case '8':
+        controls[1] = -KEYPAD_CONTROL_ANGLE;
+        controls_update_flag[1] = true;
+        break;
+    case '5':
+        controls[1] = KEYPAD_CONTROL_ANGLE;
+        controls_update_flag[1] = true;
+        break;
+    case '4':
+        controls[2] = -KEYPAD_CONTROL_ANGLE;
+        controls_update_flag[2] = true;
+        break;
+    case '6':
+        controls[2] = KEYPAD_CONTROL_ANGLE;
+        controls_update_flag[2] = true;
         break;
     case 'w':
         // throttle controls
