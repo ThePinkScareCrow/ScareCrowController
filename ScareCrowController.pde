@@ -137,20 +137,28 @@ void keyPressed()
         controls_update_flag[3] = true;
         break;
     case '8':
-        controls[1] = -KEYPAD_CONTROL_ANGLE;
-        controls_update_flag[1] = true;
+        if (controls[0] != -KEYPAD_CONTROL_ANGLE) {
+            controls[0] = -KEYPAD_CONTROL_ANGLE;
+            controls_update_flag[0] = true;
+        }
         break;
     case '5':
-        controls[1] = KEYPAD_CONTROL_ANGLE;
-        controls_update_flag[1] = true;
+        if (controls[0] != KEYPAD_CONTROL_ANGLE) {
+            controls[0] = KEYPAD_CONTROL_ANGLE;
+            controls_update_flag[0] = true;
+        }
         break;
     case '4':
-        controls[2] = -KEYPAD_CONTROL_ANGLE;
-        controls_update_flag[2] = true;
+        if (controls[1] != -KEYPAD_CONTROL_ANGLE) {
+            controls[1] = -KEYPAD_CONTROL_ANGLE;
+            controls_update_flag[1] = true;
+        }
         break;
     case '6':
-        controls[2] = KEYPAD_CONTROL_ANGLE;
-        controls_update_flag[2] = true;
+        if (controls[1] != KEYPAD_CONTROL_ANGLE) {
+            controls[1] = KEYPAD_CONTROL_ANGLE;
+            controls_update_flag[1] = true;
+        }
         break;
     case 'w':
         // throttle controls
